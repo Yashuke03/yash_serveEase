@@ -16,12 +16,51 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.post("/profile", async (req, res) => {
+    try {
+        const {
+            userId,
+            business_name,
+            description,
+            experience,
+            location
+        } = req.body;
+
+        const existingProvider = await Provider.findOne({ userId });
+
+        if (existingProvider) {
+            return res.status(400).json({
+                message: "Provider profile already exists"
+            });
+        }
+
+        const provider = await Provider.create({
+            userId,
+            business_name,
+            description,
+            experience,
+            location
+        });
+
+        res.status(201).json({
+            message: "Provider profile created successfully",
+            provider
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to create provider profile",
+            error: error.message
+        });
+    }
+});
+
 router.put("/profile/:userId", async (req, res) => {
     try {
         const { business_name, description, experience } = req.body;
 
         const provider = await Provider.findOneAndUpdate(
-            { user_id: req.params.userId },
+            { userId: req.params.userId },
             {
                 business_name,
                 description,
