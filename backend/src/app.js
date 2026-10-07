@@ -1,4 +1,6 @@
 const express = require("express");
+const cors = require("cors");
+
 const userRoutes = require("./routes/userRoutes.js");
 const authRoutes = require("./routes/authRoutes.js");
 const categoryRoutes = require("./routes/categoryRoutes.js");
@@ -8,6 +10,11 @@ const providerRoutes = require("./routes/providerRoutes.js");
 const app = express();
 
 app.use(express.json());
+    
+app.use(cors({
+  origin: 'http://localhost:5173' 
+}));
+
 
 app.get("/", (req, res) => {
     console.log("GET / received");
